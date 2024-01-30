@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TROPOMIVisor</title>
+  <style>
+    body {
+            margin: 5;
+            padding: 0;
+        }
+
+       .selectors-container {
+            position: absolute;
+            top: 50%;
+            left: 12%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-size:25px;
+            font-family: "Gill Sans", sans-serif;
+        }
+    </style>
+</head>
+<body>
+  </style>
+</head>
+
+<body>
+<div class="selectors-container">
+  <!--Desplegable para elegir parámetro-->
+  <label for="parameter">Parámetro:</label>
+  <select id="parameter">
+    <option value="COgridtemp" selected>Monóxido de carbono (CO)</option>
+    <option value="SO2gridtemp">Dióxido de azufre (SO2)</option>
+    <option value="NO2gridtemp">Dióxido de nitrógeno (NO2)</option>
+    <option value="O3gridtemp">Ozono (O3)</option>
+  </select>
+
+  <!-- Elección de mes -->
+  <label for="data">Fecha:</label>
+  <input type="month" id="data" name="start" min="2023-01" value="2023-11" />
+</div>
+
+  <!-- Imagen -->
+  <center><img id="mapa" src="http://13.53.65.240:8080/erddap/griddap/COgridtemp.png?CO_column_number_density%5B(2023-11-05T00:00:00Z)%5D%5B(35.0025):(44.99749999999999)%5D%5B(-9.997499999999993)"
+  width="720" height=auto></center>
+  
+  <script>
+    function actualizar() {
+      const parametro = document.getElementById("parameter").value;
+
+      let variab;
+
+      switch (parametro) {
+        case 'COgridtemp':
+          variab = "CO_column_number_density";
+          break;
+        case 'NO2gridtemp':
+          variab = "tropospheric_NO2_column_number_density";
+          break;
+        case 'O3gridtemp':
+          variab = "O3_column_number_density";
+          break;
+        case 'SO2gridtemp':
+          variab = "SO2_column_number_density";
+          break;
+      }
+
+      // Obtiene la fecha seleccionada
+      const fecha = document.getElementById("data").value;
+      const mes = fecha.split("-")[1];
+      const year = fecha.split("-")[0];
+
+      // Actualiza la URL de la imagen
+      const img = document.getElementById("mapa");
+      img.src = `http://13.53.65.240:8080/erddap/griddap/${parametro}.png?${variab}%5B(${year}-${mes}-05T00:00:00Z)%5D%5B(35.0025):(44.99749999999999)%5D%5B(-9.997499999999993):(4.997500000000006)%5D&.draw=surface&.vars=longitude%7Clatitude%7C${variab}&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff`;
+    }
+
+    document.getElementById("parameter").addEventListener("change", actualizar);
+    document.getElementById("data").addEventListener("change", actualizar);
+
+    // Llama a la función actualizar inicialmente
+    actualizar();
+  </script>
+
+</body>
+
+</html>
